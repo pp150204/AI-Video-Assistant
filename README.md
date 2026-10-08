@@ -17,7 +17,6 @@
 
 - [Overview & Motivation](#-overview--motivation)
 - [Key Features](#-key-features)
-- [System Architecture](#-system-architecture)
 - [Core Pipeline Modules](#-core-pipeline-modules)
   - [1. Audio Ingestion & Chunking](#1-audio-ingestion--chunking)
   - [2. Hybrid Speech-to-Text Engine](#2-hybrid-speech-to-text-engine)
@@ -67,52 +66,6 @@ In modern academic and corporate workflows, hours of high-value knowledge remain
 - **💻 Dual Interaction Modes**:
   - **Streamlit Web UI**: Glassmorphic dark-theme interface with custom CSS typography (`Syne` + `JetBrains Mono`), animated background grid, dynamic step-by-step pipeline tracker, and conversational chat bubble interface.
   - **Terminal CLI**: Headless command-line execution (`main.py`) for automated batch processing and terminal lovers.
-
----
-
-## 📐 System Architecture
-
-The following diagram illustrates the end-to-end data lifecycle from raw media input to downstream intelligence and RAG queries:
-
-```mermaid
-flowchart TD
-    subgraph Ingestion["1. Media Ingestion & Preprocessing"]
-        A[YouTube URL] -->|yt-dlp| C[Download Audio]
-        B[Local Media File] -->|pydub / ffmpeg| D[Convert to 16kHz Mono WAV]
-        C --> D
-        D --> E[Sliding Window Chunking - 10 min segments]
-    end
-
-    subgraph ASR["2. Speech-to-Text Routing"]
-        E --> F{Language Selected?}
-        F -->|English| G[Local Whisper Model]
-        F -->|Hinglish| H[Sarvam AI saaras:v2.5\n25s Windowing + Translation]
-        G --> I[Unified Meeting Transcript]
-        H --> I
-    end
-
-    subgraph Intelligence["3. LLM Processing via LangChain & Mistral"]
-        I --> J[Title Generation]
-        I --> K[Map-Reduce Summarizer\nChunk: 3000 chars, Overlap: 200]
-        I --> L[Information Extractor\nAction Items | Decisions | Questions]
-    end
-
-    subgraph VectorRAG["4. Vector Store & RAG Engine"]
-        I --> M[Recursive Splitter\nChunk: 500, Overlap: 50]
-        M --> N[all-MiniLM-L6-v2 Embeddings]
-        N --> O[(ChromaDB Vector Store)]
-        P[User Query] --> Q[Similarity Retriever - k=4]
-        O --> Q
-        Q --> R[Grounded Prompt Template]
-        R --> S[Mistral-Small LLM]
-        S --> T[Precise Answer]
-    end
-
-    subgraph UI["5. Presentation Layer"]
-        J & K & L & T --> U[Streamlit Cyberpunk Web UI / CLI]
-    end
-```
-
 ---
 
 ## 🔬 Core Pipeline Modules
@@ -352,7 +305,7 @@ python test.py
 
 ## 👨‍💻 Author & Acknowledgments
 
-Developed by **[Pranav Patel](https://github.com/pp150204)** as a **Final Year Software Engineering Capstone Project**.
+Developed by **[Prathmesh Pimpare](https://github.com/pp150204)**
 
 Special thanks to:
 - The **OpenAI Whisper** and **PyTorch** teams for state-of-the-art open-source speech recognition.
